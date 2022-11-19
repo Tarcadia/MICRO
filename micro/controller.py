@@ -83,7 +83,7 @@ def _pop_controller_from_list(name : str):
                 return _c;
     raise ValueError("Non-existing Controller of name %s." % name);
 
-def _with_controller_in_shell(name : str, action):
+def _with_controller_in_list(name : str, action):
     if name in _controller_list:
         with _controller_list_l:
             if name in _controller_list:
