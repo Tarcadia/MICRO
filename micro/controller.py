@@ -89,7 +89,7 @@ def _with_controller_in_shell(name : str, action):
     if name in _controller_list:
         with _controller_list_l:
             if name in _controller_list:
-                _c = _controller_list;
+                _c = _controller_list[name];
                 action(_c);
 
 def Controller(name : str, args : List[str], running : bool = False):
