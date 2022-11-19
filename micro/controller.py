@@ -42,6 +42,18 @@ class _Controller:
                     self._state = _Controller.ST_KILLING;
                     return;
         raise;
+    
+    def is_running(self):
+        return self._state is _Controller.ST_RUNNING;
+    
+    def is_alive(self):
+        return not self._state is _Controller.ST_DEAD;
+    
+    def is_dead(self):
+        return self._state is _Controller.ST_DEAD;
+
+    def get_state(self):
+        return self._state;
 
     def _run(self):
         _proc = subprocess.Popen(
@@ -57,20 +69,36 @@ class _Controller:
             self._state = _Controller.ST_DEAD;
     
 
-def Controller(name : str, args : List[str], running : bool = False):
+def _add_controller_to_list(name : str, controller : _Controller):
     if not name in _controller_list:
         with _controller_list_l:
             if not name in _controller_list:
-                _controller_list[name] = _Controller(name, args, running);
-                return _controller_list[name];
+                _controller_list[name] = controller;
+                return;
     raise ValueError("Existing Controller of name %s." % name);
 
-def KillController(name : str):
+def _pop_controller_from_list(name : str):
     if name in _controller_list:
         with _controller_list_l:
             if name in _controller_list:
                 _c = _controller_list.pop(name);
-                _c.kill();
-                return;
-    raise ValueError("Non-existing Controller of name %s." % name)
+                return _c;
+    raise ValueError("Non-existing Controller of name %s." % name);
+
+def _with_controller_in_shell(name : str, action):
+    if name in _controller_list:
+        with _controller_list_l:
+            if name in _controller_list:
+                _c = _controller_list;
+                action(_c);
+
+def Controller(name : str, args : List[str], running : bool = False):
+    _c = _Controller(name, args, running);
+    _add_controller_to_list(name = name, controller = _c);
+    return _c;
+
+def KillController(name : str):
+    _c = _pop_controller_from_list(name = name);
+    _c.kill();
+    return;
     
