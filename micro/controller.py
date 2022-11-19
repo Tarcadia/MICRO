@@ -28,9 +28,9 @@ class _Controller:
             self.start();
 
     def start(self):
-        if self._state == _Controller.ST_PRERUN:
+        if self._state is _Controller.ST_PRERUN:
             with self._state_l:
-                if self._state == _Controller.ST_PRERUN:
+                if self._state is _Controller.ST_PRERUN:
                     self._thread.start();
                     return;
         raise;
