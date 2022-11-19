@@ -25,6 +25,7 @@ class _Controller:
         self._args = args;
         self._state = _Controller.ST_PRRUN;
         self._state_l = threading.Lock();
+        self._proc = None;
         self._thread = threading.Thread(target = self._run, name = self._name, daemon = True);
         self._recorder = rec.get_recorder(name);
         if running:
@@ -38,6 +39,14 @@ class _Controller:
         if self._state is _Controller.ST_PRERUN:
             with self._state_l:
                 if self._state is _Controller.ST_PRERUN:
+                    self._proc = subprocess.Popen(
+                        args = self._args,
+                        stdin = subprocess.PIPE,
+                        stdout = subprocess.PIPE,
+                        stderr = subprocess.PIPE,
+                        shell = True
+                    );
+                    self._state = _Controller.ST_RUNNING;
                     self._thread.start();
                     return;
 
@@ -61,15 +70,13 @@ class _Controller:
         return self._state;
 
     def _run(self):
-        _proc = subprocess.Popen(
-            args = self._args,
-            stdin = subprocess.PIPE,
-            stdout = subprocess.PIPE,
-            stderr = subprocess.PIPE,
-            shell = True
-        );
         while self._state == _Controller.ST_RUNNING:
-            pass;
+            try:
+                _line = self._proc.stdout.readline();
+                self._recorder.record(_line);
+            except Exception as e:
+                pass;
+                ## TODO: Add exception handling.
         with self._state_l:
             self._state = _Controller.ST_DEAD;
     
