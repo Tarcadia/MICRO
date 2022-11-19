@@ -102,6 +102,7 @@ def format(record : _Record):
             if _formatter:
                 return _formatter(record);
     return "";
+    ## TODO: Check _formatter.
 
 def set_formatter(formatter):
     with _formatter_l:
@@ -116,5 +117,6 @@ def get_history(filter = None):
     if filter:
         return [_rec for _rec in _history if filter(_rec)];
         ## TODO: Should this be locked? I think visiting _history is thread safe for python ensures it.
+        ## TODO: Check filter.
     else:
         return _history.copy();
