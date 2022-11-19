@@ -103,6 +103,7 @@ def _with_controller_in_list(name : str, action):
             if name in _controller_list:
                 _c = _controller_list[name];
                 action(_c);
+                ## TODO: Check action.
 
 def Controller(name : str, args : List[str], running : bool = False):
     _c = _Controller(name, args, running);
