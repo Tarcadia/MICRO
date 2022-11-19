@@ -67,13 +67,21 @@ class _Recorder:
                     self._markers.remove(marker);
                     self._markers_tuple = tuple(sorted(self._markers));
 
-    def record(self, message : str):
-        _rec = _Record(
-            self._name,
-            time = time.time(),
-            markers = self._markers_tuple,
-            message = message
-        );
+    def record(self, message : str, markers : Tuple = ()):
+        if not markers:
+            _rec = _Record(
+                self._name,
+                time = time.time(),
+                markers = self._markers_tuple,
+                message = message
+            );
+        else:
+            _rec = _Record(
+                self._name,
+                time = time.time(),
+                markers = tuple(sorted(self._markers + markers)),
+                message = message
+            );
         with _history_l:
             _history.append(_rec)
 
