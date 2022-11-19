@@ -6,6 +6,8 @@ from typing import *;
 import subprocess;
 import threading;
 
+from . import recorder as rec;
+
 
 
 _controller_list = {};
@@ -24,8 +26,13 @@ class _Controller:
         self._state = _Controller.ST_PRRUN;
         self._state_l = threading.Lock();
         self._thread = threading.Thread(target = self._run, name = self._name, daemon = True);
+        self._recorder = rec.get_recorder(name);
         if running:
             self.start();
+    
+    @property
+    def recorder(self):
+        return self._recorder;
 
     def start(self):
         if self._state is _Controller.ST_PRERUN:
