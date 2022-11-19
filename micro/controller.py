@@ -33,7 +33,6 @@ class _Controller:
                 if self._state is _Controller.ST_PRERUN:
                     self._thread.start();
                     return;
-        raise;
 
     def kill(self):
         if self._state != _Controller.ST_DEAD:
@@ -41,7 +40,6 @@ class _Controller:
                 if self._state != _Controller.ST_DEAD:
                     self._state = _Controller.ST_KILLING;
                     return;
-        raise;
     
     def is_running(self):
         return self._state is _Controller.ST_RUNNING;
