@@ -112,5 +112,9 @@ def dump_history(file : str):
         fp.writelines((format(_rec) for _rec in _history));
         ## TODO: Should this be locked? I think visiting _history is thread safe for python ensures it.
 
-def get_history():
-    return _history.copy();
+def get_history(filter = None):
+    if filter:
+        return [_rec for _rec in _history if filter(_rec)];
+        ## TODO: Should this be locked? I think visiting _history is thread safe for python ensures it.
+    else:
+        return _history.copy();
