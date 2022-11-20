@@ -23,7 +23,7 @@ class _Controller:
     def __init__(self, name : str, args : List[str], running : bool = False) -> None:
         self._name = name;
         self._args = args;
-        self._state = _Controller.ST_PRRUN;
+        self._state = _Controller.ST_PRERUN;
         self._state_l = threading.Lock();
         self._proc = None;
         self._thread = threading.Thread(target = self._run, name = self._name, daemon = True);
